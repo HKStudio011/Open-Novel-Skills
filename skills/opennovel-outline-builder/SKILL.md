@@ -44,4 +44,4 @@ Each chapter brief must include:
 - Every chapter must have a goal, conflict, mini-climax, and hook for next chapter.
 - Do not reveal secrets before their scheduled chapter per bible.md.
 - Keep the outline consistent with bible.md (characters, world rules).
-- Do not write chapter prose — use opennovel-chapter-writer for that.
+- Do not write chapter prose — use opennovel-writing-assistant for that.
