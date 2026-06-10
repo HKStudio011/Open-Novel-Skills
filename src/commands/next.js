@@ -18,7 +18,7 @@ const WORKFLOW_GUIDE = {
   },
   'content': {
     message: 'Start writing chapters',
-    detail: 'Use opennovel-chapter-writer skill to write chapters. Save outputs to content/chapter_001.md, etc.',
+    detail: 'Use opennovel-writing-assistant skill to write chapters. Save outputs to content/chapter_001.md, etc.',
     hint: 'Always check bible.md and continuity.md before writing to stay consistent.',
   },
   'continuity': {

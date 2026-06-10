@@ -1,57 +1,48 @@
 ---
 name: opennovel
-description: Framework for AI-assisted novel/story writing. Covers project setup, story bible, plot outlining, chapter writing, continuity tracking, editing, and export. Use when user wants to write a novel, story, or script — or invokes /opennovel.
+description: Framework for AI-assisted novel/story writing. Load this skill as the entry point — delegates to opennovel-writing-assistant for interactive writing sessions. Covers project init, story bible, outlining, chapter writing, review, continuity tracking, and export.
 ---
 
 # OpenNovel Framework
 
-## Quick Start
+## Entry Point
 
-User says "I want to write a story" → load this skill → start the pipeline.
+**Load `opennovel-writing-assistant` to start a creative writing session.**
 
-## 6-Step Pipeline
+This skill (`opennovel`) is the root entry point. When the user says "I want to write a story" or similar:
 
-### Step 0: Discussion
-Do NOT start filling templates yet. First discuss with user:
-- Genre, tone, inspiration
-- Premise & logline ideas
-- Character concepts (protagonist, antagonist)
-- World & setting overview
-- Plot skeleton (beginning → middle → end)
+1. Load this skill for orientation
+2. Delegate to `opennovel-writing-assistant` for the interactive session
+3. The writing assistant will check for project context and call helper skills as needed
 
-After user confirms → proceed to project setup.
+## Skill Inventory
 
-### Step 1: Project Setup
-- Run `opennovel init <name>` to scaffold the project
-- Fill `project.md` — genre, tone, POV, premise, logline, themes, conflict, stakes, ending type
+| Skill | Role | When to use |
+|---|---|---|
+| `opennovel-project-init` | Create/update project.md | New project, missing metadata |
+| `opennovel-writing-assistant` | Core orchestration, write/revise content | Every writing session |
+| `opennovel-bible-builder` | Build story bible (characters, world, rules, secrets) | Missing context, worldbuilding |
+| `opennovel-outline-builder` | Plan plot, timeline, chapter briefs | Missing structure, planning |
+| `opennovel-continuity-manager` | Track story state after chapters | After chapter is finalized |
+| `opennovel-review` | Diagnosis-only quality check | Before finalizing a chapter |
+| `opennovel-exporter` | Compile content/ to output/ | Ready for final output |
 
-### Step 2: Bible Builder
-- Fill `bible.md` — characters, world, rules, secrets, cause-effect
-- Use `opennovel-bible-builder` skill for guidance
+## Workflow (managed by writing-assistant)
 
-### Step 3: Outline Builder
-- Fill `outline.md` — plot, timeline, 10 turning points, chapter list, chapter briefs
-- Use `opennovel-outline-builder` skill for guidance
-
-### Step 4: Write (per chapter loop)
-1. Read chapter brief from `outline.md`
-2. Check continuity in `continuity.md`
-3. Write chapter → `content/chapter_NNN.md`
-4. Review (logic → character → plot → pacing → emotion → prose)
-5. Edit if needed
-6. Update `continuity.md`
-
-### Step 5: Final Review & Edit
-1. Read entire story from `content/`
-2. Review holistically (plot holes, pacing across chapters, character arcs)
-3. Fix issues (logic first, prose last)
-4. Export → `opennovel export`
-
-### Step 6: Export
-- Run `opennovel export` or the exporter script for various formats
-- Output goes to `output/`
+```
+writing-assistant
+  ├── check project.md → missing? → project-init
+  ├── check bible.md → missing? → bible-builder
+  ├── check outline.md → missing? → outline-builder
+  ├── write/revise content/chapter_NNN.md
+  │     ├── → review (diagnosis)
+  │     ├── → revise (loop until OK)
+  │     └── → continuity-manager (only after chapter finalized)
+  └── repeat → exporter when complete
+```
 
 ## Golden Rules
+
 1. Never reveal secrets before their scheduled chapter
 2. Never make characters act against their core personality without sufficient cause
 3. Never break world logic without establishing exception rules first
@@ -59,9 +50,10 @@ After user confirms → proceed to project setup.
 5. Each chapter must have: goal, conflict, mini-climax, and hook
 
 ## Commands
+
 - `opennovel init <name>` — scaffold a new project
 - `opennovel status` — check progress
 - `opennovel next` — show next recommended step
 - `opennovel export [--from N] [--to N]` — compile chapters into output
 - `opennovel skills list` — list available OpenNovel skills
-- `opennovel skills install --target codex|claude --scope project|user [--link]` — install skills for your coding agent
+- `opennovel skills install --target codex|claude --scope project|user [--link]` — install skills
