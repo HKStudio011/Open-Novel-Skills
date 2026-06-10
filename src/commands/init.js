@@ -93,10 +93,7 @@ function init(args) {
   console.log('6. Track continuity     - continuity.md');
   console.log('7. Export final         - output/');
   console.log('');
-  console.log('Install agent skills:');
-  console.log('  opennovel skills list');
-  console.log('  opennovel skills install --target codex --scope project');
-  console.log('  opennovel skills install --target claude --scope project');
+  console.log('Skills installed at .agents/skills/ \u2014 ready for your AI coding assistant.');
 }
 
 module.exports = init;
