@@ -16,7 +16,6 @@ opennovel skills list    # List agent skills
 ```
 
 ## OpenNovel Skills
-- `opennovel-project-init` — Create/update project.md
 - `opennovel-writing-assistant` — Core writing orchestration
 - `opennovel-bible-builder` — Characters, world, rules, secrets
 - `opennovel-outline-builder` — Plot, timeline, chapter briefs

@@ -46,7 +46,7 @@ Otherwise, before writing, check for missing context:
 
 | Missing file | Action |
 |---|---|
-| `project.md` | Suggest `opennovel-project-init` to set up project metadata |
+| `project.md` | Ask user to run `opennovel init <name>` or fill in project metadata |
 | `bible.md` | Suggest `opennovel-bible-builder` to create characters/world/secrets |
 | `outline.md` or empty chapter list | Suggest `opennovel-outline-builder` to create chapter briefs |
 | `continuity.md` | Ask user for current story state, create initial continuity entry |
@@ -118,7 +118,7 @@ Use when the user wants a fast rewrite of a single chapter without full project 
 3. Rewrite the chapter in Markdown.
 4. Present the rewrite to the user.
 5. If they want revisions, loop: revise → review (call `opennovel-review`) → revise.
-6. If the user wants to save, ask: "Create an OpenNovel project for this?" → if yes, call `opennovel-project-init`, save to `content/chapter_001.md`.
+6. If the user wants to save, ask: "Create an OpenNovel project for this?" → if yes, run `opennovel init <name>` outside, then save to `content/chapter_001.md`.
 7. Do NOT create or modify bible.md/outline.md unless the user explicitly asks.
 
 ##### Full Path: Extract, Propose, Rewrite
@@ -147,7 +147,7 @@ Use when the user wants to import a story or chapter into the OpenNovel framewor
 6. If user approves (fully or partially):
    - Create or update `bible.md` with the proposed content.
    - Create or update `outline.md` with the proposed content.
-   - If no project exists yet, ask: "Create an OpenNovel project for this?" → run `opennovel-project-init` first.
+   - If no project exists yet, ask: "Create an OpenNovel project for this?" → ask user to run `opennovel init <name>` first.
 7. If user declines updates, proceed with the rewrite using only the raw text as context.
 8. Proceed to rewrite/revise the chapter(s):
    - Save rewritten content to `content/chapter_NNN.md`.

@@ -19,7 +19,6 @@ This skill (`opennovel`) is the root entry point. When the user says "I want to 
 
 | Skill | Role | When to use |
 |---|---|---|
-| `opennovel-project-init` | Create/update project.md | New project, missing metadata |
 | `opennovel-writing-assistant` | Core orchestration, write/revise content | Every writing session |
 | `opennovel-bible-builder` | Build story bible (characters, world, rules, secrets) | Missing context, worldbuilding |
 | `opennovel-outline-builder` | Plan plot, timeline, chapter briefs | Missing structure, planning |
@@ -31,7 +30,7 @@ This skill (`opennovel`) is the root entry point. When the user says "I want to 
 
 ```
 writing-assistant
-  ├── check project.md → missing? → project-init
+  ├── check project.md → missing? → ask user to run \`opennovel init <name>\`
   ├── check bible.md → missing? → bible-builder
   ├── check outline.md → missing? → outline-builder
   ├── write/revise content/chapter_NNN.md

@@ -96,7 +96,6 @@ Chi tiết:
 
 | Skill | Vai trò | Khi nào dùng |
 |---|---|---|
-| `opennovel-project-init` | Tạo/cập nhật project metadata | Project mới, thiếu metadata |
 | `opennovel-writing-assistant` | Điều phối chính, viết/sửa | Mọi writing session — **entry point chính** |
 | `opennovel-bible-builder` | Nhân vật, thế giới, luật, bí mật | Thiếu context, worldbuilding, hoặc analyze raw text |
 | `opennovel-outline-builder` | Plot, timeline, chapter briefs | Thiếu cấu trúc, planning, hoặc analyze raw text |

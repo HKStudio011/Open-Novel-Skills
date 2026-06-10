@@ -66,6 +66,7 @@ function init(args) {
       e.isDirectory() && fs.existsSync(path.join(skillsDir, e.name, 'SKILL.md'))
     );
     for (const dir of skillDirs) {
+      if (dir.name === 'opennovel-project-init') continue;
       const src = path.join(skillsDir, dir.name);
       const dest = path.join(projectSkillsDir, dir.name);
       if (!fs.existsSync(dest)) {

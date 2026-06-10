@@ -96,7 +96,6 @@ Breakdown:
 
 | Skill | Role | When to use |
 |---|---|---|
-| `opennovel-project-init` | Create/update project metadata | New project, missing metadata |
 | `opennovel-writing-assistant` | Core orchestration, write/revise | Every writing session — **main entry point** |
 | `opennovel-bible-builder` | Characters, world, rules, secrets | Missing context, worldbuilding, or raw text analysis |
 | `opennovel-outline-builder` | Plot, timeline, chapter briefs | Missing structure, planning, or raw text analysis |
