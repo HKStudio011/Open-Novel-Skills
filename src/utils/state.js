@@ -4,16 +4,11 @@ const path = require('path');
 const STATE_FILENAME = '.opennovel/state.json';
 
 const MODULES = [
-  { id: 'core',       name: 'Story Core',        label: 'core' },
-  { id: 'characters', name: 'Characters',        label: 'characters' },
-  { id: 'world',      name: 'World',             label: 'world' },
-  { id: 'logic',      name: 'Logic System',      label: 'logic' },
-  { id: 'plot',       name: 'Plot Architecture', label: 'plot' },
-  { id: 'chapters',   name: 'Chapters',          label: 'chapters' },
-  { id: 'writing',    name: 'Writing Pipeline',  label: 'writing' },
-  { id: 'approved',   name: 'Approved Chapters', label: 'approved' },
-  { id: 'continuity', name: 'Continuity Memory', label: 'continuity' },
-  { id: 'editing',    name: 'Final Editing',     label: 'editing' },
+  { id: 'project',    name: 'Project Setup',     label: 'project' },
+  { id: 'bible',      name: 'Story Bible',       label: 'bible' },
+  { id: 'outline',    name: 'Plot & Outline',    label: 'outline' },
+  { id: 'content',    name: 'Chapter Writing',   label: 'content' },
+  { id: 'continuity', name: 'Continuity',        label: 'continuity' },
   { id: 'output',     name: 'Final Output',      label: 'output' },
 ];
 
