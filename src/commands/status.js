@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const { MODULES, loadState, findProjectDir } = require('../utils/state.js');
 
 function status() {
@@ -37,10 +35,8 @@ function status() {
     const s = state.modules[mod.id] || 'pending';
     const icon = STATUS_ICONS[s] || '\u2B1C';
     const label = `${mod.label}`;
-    const dirExists = fs.existsSync(path.join(projectDir, mod.label));
-    const dirMark = dirExists ? '\uD83D\uDCC1' : '\u274C';
 
-    console.log(`  ${icon} ${dirMark} ${label.padEnd(20)} ${mod.name} [${s}]`);
+    console.log(`  ${icon} ${label.padEnd(20)} ${mod.name} [${s}]`);
 
     if (s === 'done') completed++;
     else if (s === 'in_progress') inProgress++;
