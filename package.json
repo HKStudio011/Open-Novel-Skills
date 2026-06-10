@@ -1,0 +1,16 @@
+{
+  "name": "opennovel",
+  "version": "0.1.0",
+  "description": "CLI tool for the OpenNovel novel-writing framework — scaffold project structure and track writing progress",
+  "bin": {
+    "opennovel": "./bin/opennovel.js"
+  },
+  "files": [
+    "bin/",
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
