@@ -1,313 +1,182 @@
-const path = require('path');
+function projectTemplate(name) {
+  return `# Project: ${name}
 
-const EMPTY = '.gitkeep\n';
-
-function getFileTree(projectName) {
-  return [
-    // Story Core
-    { dir: 'core' },
-    { file: 'core/story_core.md', content: storyCoreTemplate(projectName) },
-
-    // Characters
-    { dir: 'characters' },
-    { dir: 'characters/main_characters' },
-    { file: 'characters/main_characters/.gitkeep', content: EMPTY },
-    { dir: 'characters/supporting_characters' },
-    { file: 'characters/supporting_characters/.gitkeep', content: EMPTY },
-    { dir: 'characters/antagonists' },
-    { file: 'characters/antagonists/.gitkeep', content: EMPTY },
-    { file: 'characters/character_bible.md', content: characterBibleTemplate },
-    { file: 'characters/relationships.md', content: relationshipsTemplate },
-
-    // World
-    { dir: 'world' },
-    { file: 'world/world_overview.md', content: worldOverviewTemplate },
-    { file: 'world/locations.md', content: locationsTemplate },
-    { file: 'world/history.md', content: historyTemplate },
-    { file: 'world/culture.md', content: cultureTemplate },
-    { file: 'world/atmosphere.md', content: atmosphereTemplate },
-
-    // Logic
-    { dir: 'logic' },
-    { file: 'logic/world_rules.md', content: worldRulesTemplate },
-    { file: 'logic/power_system.md', content: powerSystemTemplate },
-    { file: 'logic/secrets_reveals.md', content: secretsRevealsTemplate },
-    { file: 'logic/cause_effect.md', content: causeEffectTemplate },
-    { file: 'logic/logic_errors_to_avoid.md', content: logicErrorsTemplate },
-
-    // Plot
-    { dir: 'plot' },
-    { file: 'plot/main_plot.md', content: mainPlotTemplate },
-    { file: 'plot/subplot.md', content: subplotTemplate },
-    { file: 'plot/timeline.md', content: timelineTemplate },
-    { file: 'plot/turning_points.md', content: turningPointsTemplate },
-    { file: 'plot/climax_ending.md', content: climaxEndingTemplate },
-
-    // Chapters
-    { dir: 'chapters' },
-    { dir: 'chapters/chapter_briefs' },
-    { file: 'chapters/chapter_briefs/.gitkeep', content: EMPTY },
-    { dir: 'chapters/scene_breakdowns' },
-    { file: 'chapters/scene_breakdowns/.gitkeep', content: EMPTY },
-    { file: 'chapters/chapter_list.md', content: chapterListTemplate },
-    { file: 'chapters/chapter_hooks.md', content: chapterHooksTemplate },
-
-    // Writing
-    { dir: 'writing' },
-    { dir: 'writing/ai_outputs' },
-    { file: 'writing/ai_outputs/.gitkeep', content: EMPTY },
-    { dir: 'writing/review_notes' },
-    { file: 'writing/review_notes/.gitkeep', content: EMPTY },
-    { file: 'writing/writing_prompts.md', content: writingPromptsTemplate },
-    { file: 'writing/revision_prompts.md', content: revisionPromptsTemplate },
-
-    // Approved chapters
-    { dir: 'approved' },
-    { file: 'approved/.gitkeep', content: EMPTY },
-
-    // Continuity
-    { dir: 'continuity' },
-    { file: 'continuity/continuity_log.md', content: continuityLogTemplate },
-    { file: 'continuity/character_status.md', content: characterStatusTemplate },
-    { file: 'continuity/revealed_information.md', content: revealedInfoTemplate },
-    { file: 'continuity/hidden_information.md', content: hiddenInfoTemplate },
-    { file: 'continuity/next_chapter_setup.md', content: nextChapterSetupTemplate },
-
-    // Editing
-    { dir: 'editing' },
-    { file: 'editing/structure_edit.md', content: structureEditTemplate },
-    { file: 'editing/prose_edit.md', content: proseEditTemplate },
-    { file: 'editing/dialogue_edit.md', content: dialogueEditTemplate },
-    { file: 'editing/final_review.md', content: finalReviewTemplate },
-
-    // Output
-    { dir: 'output' },
-    { file: 'output/full_story.md', content: fullStoryTemplate },
-    { file: 'output/final_script.md', content: finalScriptTemplate },
-  ];
-}
-
-// ----- Template content generators -----
-
-function storyCoreTemplate(name) {
-  return `# Story Core — ${name}
+## Metadata
+- **Genre:**
+- **Target audience:**
+- **Tone:**
+- **Point of view:**
+- **Tense:**
+- **Estimated length:**
 
 ## Premise
-[Ý tưởng nền của câu chuyện]
+[One-sentence summary of the core idea]
 
 ## Logline
-Một [nhân vật chính] phải [mục tiêu], nhưng [trở ngại lớn], buộc họ phải [lựa chọn/thay đổi].
+A [protagonist] must [goal], but [obstacle], forcing them to [choice/change].
 
-## Chủ đề chính
+## Themes
 -
 -
 
-## Xung đột chính
-- Bên ngoài:
-- Bên trong:
+## Central Conflict
+- External:
+- Internal:
 
-## Mục tiêu nhân vật chính
-- Mục tiêu bên ngoài:
-- Mục tiêu bên trong:
-
-## Cái giá nếu thất bại
+## Stakes
+What happens if the protagonist fails:
 -
 
-## Tông truyện
--
-
-## Kiểu kết thúc
-[Đóng / mở / bi kịch / bittersweet / twist / vòng lặp]
+## Ending Type
+[Closed / open / tragedy / bittersweet / twist / loop]
 `;
 }
 
-const characterBibleTemplate = `# Character Bible
+function bibleTemplate(name) {
+  return `# Story Bible — ${name}
 
-## Hồ sơ nhân vật chuẩn
+## Characters
 
-Tên:
-Vai trò:
-Tuổi:
-Ngoại hình:
-Trang phục:
-Vũ khí/vật phẩm đặc trưng:
-Tính cách:
-Giọng nói/hội thoại:
-Mục tiêu bên ngoài:
-Mục tiêu bên trong:
-Nỗi sợ:
-Điểm yếu:
-Điểm mạnh:
-Quá khứ:
-Bí mật:
-Quan hệ với nhân vật khác:
-Điều nhân vật biết:
-Điều nhân vật chưa biết:
-Điều nhân vật đang che giấu:
-Sự thay đổi qua truyện:
-Số phận cuối truyện:
+### Character Profile Template
+Copy and fill for each character:
 
-## Không được viết sai
+\`\`\`
+Name:
+Role:
+Age:
+Appearance:
+Personality:
+Voice/speech:
+External goal:
+Internal goal:
+Fear:
+Weakness:
+Strength:
+Backstory:
+Secret:
+Relationships:
+What they know:
+What they don't know:
+What they hide:
+Arc through story:
+Final fate:
+\`\`\`
+
+### Must Not Write Wrong
 -
 -
 -
-`;
 
-const relationshipsTemplate = `# Relationships
+## World
 
-## Bảng quan hệ nhân vật
+### Setting
+[Where and when does the story take place?]
 
-| Nhân vật 1 | Nhân vật 2 | Kiểu quan hệ | Mức độ tin tưởng | Mâu thuẫn | Thay đổi qua truyện |
-|------------|------------|--------------|------------------|-----------|---------------------|
-|            |            |              |                  |           |                     |
-`;
-
-const worldOverviewTemplate = `# World Overview
-
-## Tổng quan bối cảnh
-[Thế giới/câu chuyện diễn ra ở đâu?]
-
-## Thời gian
-[Quá khứ / hiện đại / tương lai / giả tưởng / không xác định]
-`;
-
-const locationsTemplate = `# Locations
-
-## Địa điểm chính
+### Locations
 -
 -
 
-## Địa điểm phụ
--
--
-`;
+### History
+- Past events:
 
-const historyTemplate = `# History
+### Culture
+- Rules/laws:
+- Social classes:
+- Beliefs:
+- Customs:
 
-## Lịch sử quan trọng
-- Sự kiện quá khứ:
-- Biến cố ảnh hưởng tới hiện tại:
-`;
+### Atmosphere
+- Colors:
+- Light:
+- Sound:
+- Dominant feeling:
 
-const cultureTemplate = `# Culture
+## Logic & Rules
 
-## Xã hội và văn hóa
-- Luật lệ:
-- Tầng lớp:
-- Tín ngưỡng:
-- Tập quán:
-`;
-
-const atmosphereTemplate = `# Atmosphere
-
-## Không khí hình ảnh
-- Màu sắc:
-- Ánh sáng:
-- Âm thanh:
-- Cảm giác chủ đạo:
-`;
-
-const worldRulesTemplate = `# World Rules
-
-## Luật thế giới
-1.
-2.
-3.
-`;
-
-const powerSystemTemplate = `# Power System
-
-## Luật sức mạnh/năng lực/hệ thống
+### World Rules
 1.
 2.
 3.
 
-## Giới hạn
-- Nhân vật không thể:
-- Thế giới không cho phép:
-- Phản diện không thể:
-`;
-
-const secretsRevealsTemplate = `# Secrets & Reveals
-
-## Bí mật và thời điểm hé lộ
-- Bí mật 1:
-  - Người biết:
-  - Người chưa biết:
-  - Hé lộ ở chương:
-- Bí mật 2:
-  - Người biết:
-  - Người chưa biết:
-  - Hé lộ ở chương:
-`;
-
-const causeEffectTemplate = `# Cause & Effect
-
-## Nhân quả quan trọng
-Nếu [sự kiện A] xảy ra thì [hệ quả B].
-`;
-
-const logicErrorsTemplate = `# Logic Errors to Avoid
-
-## Lỗi logic cần tránh
--
--
-`;
-
-const mainPlotTemplate = `# Main Plot
-
-## Mở đầu
--
-
-## Biến cố khởi đầu
--
-
-## Mục tiêu chính được thiết lập
--
-
-## Điểm ngoặt 1
--
-
-## Chuỗi thử thách
+### Power System (if applicable)
 1.
 2.
 3.
 
-## Điểm giữa truyện
--
+### Limits
+- Characters cannot:
+- The world does not allow:
+- The antagonist cannot:
 
-## Khủng hoảng lớn
--
+### Secrets & Reveals
+- Secret 1:
+  - Known by:
+  - Hidden from:
+  - Reveal chapter:
+- Secret 2:
+  - Known by:
+  - Hidden from:
+  - Reveal chapter:
 
-## Điểm ngoặt 2
--
+### Cause & Effect
+If [event A] then [consequence B].
 
-## Cao trào
+### Logic Errors to Avoid
 -
-
-## Kết thúc
--
-
-## Dư âm sau kết thúc
 -
 `;
+}
 
-const subplotTemplate = `# Subplot
+function outlineTemplate(name) {
+  return `# Outline — ${name}
 
-## Tuyến phụ
-[Miêu tả tuyến truyện phụ và cách nó kết nối với mạch chính]
-`;
+## Plot
 
-const timelineTemplate = `# Timeline
+### Opening
+-
 
-## Dòng thời gian
-| Thời điểm | Sự kiện | Ghi chú |
-|-----------|---------|---------|
-|           |         |         |
-`;
+### Inciting Incident
+-
 
-const turningPointsTemplate = `# Turning Points
+### Main Goal Established
+-
 
+### Turning Point 1
+-
+
+### Rising Conflict Chain
+1.
+2.
+3.
+
+### Midpoint
+-
+
+### Crisis
+-
+
+### Turning Point 2
+-
+
+### Climax
+-
+
+### Resolution
+-
+
+### Aftermath
+-
+
+## Subplots
+[Describe subplots and how they connect to the main plot]
+
+## Timeline
+
+| Time | Event | Notes |
+|------|-------|-------|
+|      |       |       |
+
+## 10 Turning Points
 1. Opening Image
 2. Inciting Incident
 3. First Turning Point
@@ -319,131 +188,100 @@ const turningPointsTemplate = `# Turning Points
 9. Resolution
 10. Final Image
 
-[Điền chi tiết cho từng mốc]
+## Chapter List
+
+| # | Title | Est. Length | Status |
+|---|-------|-------------|--------|
+| 1 |       |             |        |
+
+## Chapter Hooks
+
+| # | End Hook | Leads To |
+|---|----------|----------|
+|   |          |          |
 `;
+}
 
-const climaxEndingTemplate = `# Climax & Ending
+const continuityTemplate = `# Continuity
 
-## Cao trào
+## Chapter Log
+\`\`\`
+Chapter [N]:
+- New info characters learned:
+- Secrets revealed:
+- Relationship changes:
+- New items/events:
+- End state:
+- Hook for next:
+\`\`\`
+
+## Character Status
+
+| Character | Status | Current Goal | Knows | Hides | Emotion |
+|-----------|--------|-------------|-------|-------|---------|
+|           |        |             |       |       |         |
+
+## Revealed Information
 -
 
-## Kết thúc
-[Miêu tả kết thúc]
+## Hidden Information (still to conceal)
+-
 
-## Loại kết thúc
-[Đóng / mở / bi kịch / bittersweet / twist / vòng lặp]
-`;
+## Next Chapter Setup
+### Consequences to carry forward
+-
 
-const chapterListTemplate = `# Chapter List
-
-| Chương | Tên | Độ dài dự kiến | Trạng thái |
-|--------|-----|----------------|------------|
-| 1      |     |                |            |
-`;
-
-const chapterHooksTemplate = `# Chapter Hooks
-
-| Chương | Hook cuối | Dẫn tới chương |
-|--------|-----------|----------------|
-|        |           |                |
-`;
-
-const writingPromptsTemplate = `# Writing Prompts
-
-## Prompt chuẩn cho AI viết chương
-
-Khi viết chương, hãy sử dụng prompt sau:
-
-"Bạn là AI viết truyện theo OpenNovel Framework.
-Hãy viết Chương [số]: [tên chương].
-...
-"
-`;
-
-const revisionPromptsTemplate = `# Revision Prompts
-
-## Prompt review
-
-"Hãy review chương truyện theo OpenNovel Framework.
-Kiểm tra: Logic, Nhân vật, Cốt truyện, Nhịp truyện, Cảm xúc, Văn phong."
-
-## Prompt sửa
-
-"Hãy chỉnh sửa chương dựa trên lỗi đã phát hiện.
-Thứ tự sửa: logic → nhân vật → cốt truyện → nhịp → hội thoại → văn phong."
-`;
-
-const continuityLogTemplate = `# Continuity Log
-
-## Chương [số]
-- Nhân vật đã biết thêm:
-- Bí mật đã hé lộ:
-- Quan hệ thay đổi:
-- Vật phẩm/sự kiện mới:
-- Trạng thái cuối chương:
-- Móc nối chương sau:
-`;
-
-const characterStatusTemplate = `# Character Status
-
-| Nhân vật | Tình trạng | Mục tiêu hiện tại | Đã biết | Đang giấu | Cảm xúc |
-|----------|------------|-------------------|---------|-----------|---------|
-|          |            |                   |         |           |         |
-`;
-
-const revealedInfoTemplate = `# Revealed Information
-
-## Thông tin đã hé lộ
+### Hooks for next chapter
 -
 `;
 
-const hiddenInfoTemplate = `# Hidden Information
+const agentsMdTemplate = `<!-- OPENNOVEL_START -->
+# OpenNovel — Writing Framework
 
-## Thông tin vẫn cần giấu
--
+## AI Role
+You are an AI assistant using the OpenNovel Framework for novel/story writing.
+
+## Core Files
+- \`project.md\` — project metadata, genre, tone, POV, premise, logline
+- \`bible.md\` — characters, world, rules, secrets, logic
+- \`outline.md\` — plot, timeline, chapter list, chapter briefs
+- \`continuity.md\` — story state, revealed/hidden info, next chapter setup
+
+## Content
+- \`content/\` — chapter files (\`chapter_001.md\`, etc.)
+
+## Output
+- \`output/\` — final exported files (.txt, .html, .docx, .pdf)
+
+## OpenNovel Skills
+When available, use installed skills:
+- \`opennovel-project-setup\`
+- \`opennovel-bible-builder\`
+- \`opennovel-outline-builder\`
+- \`opennovel-chapter-writer\`
+- \`opennovel-continuity-manager\`
+- \`opennovel-editor\`
+- \`opennovel-exporter\`
+
+## Writing Rules
+1. Every chapter needs: goal, conflict, mini-climax, hook
+2. Review order: logic → character → plot → pacing → emotion → prose
+3. Fix order: logic first, prose last
+4. Update continuity after every chapter
+5. Never reveal secrets early or break character
+<!-- OPENNOVEL_END -->
 `;
 
-const nextChapterSetupTemplate = `# Next Chapter Setup
+function getFileTree(projectName) {
+  return [
+    { file: 'project.md', content: projectTemplate(projectName) },
+    { file: 'bible.md', content: bibleTemplate(projectName) },
+    { file: 'outline.md', content: outlineTemplate(projectName) },
+    { file: 'continuity.md', content: continuityTemplate },
+    { dir: 'content' },
+    { dir: 'output' },
+    { file: 'AGENTS.md', content: agentsMdTemplate },
+  ];
+}
 
-## Hậu quả cần nhớ ở chương sau
--
-
-## Móc nối chương tiếp theo
--
-`;
-
-const structureEditTemplate = `# Structure Edit
-
-## Kiểm tra cấu trúc tổng thể
-[ ]
-`;
-
-const proseEditTemplate = `# Prose Edit
-
-## Kiểm tra văn phong
-[ ]
-`;
-
-const dialogueEditTemplate = `# Dialogue Edit
-
-## Kiểm tra hội thoại
-[ ]
-`;
-
-const finalReviewTemplate = `# Final Review
-
-## Kiểm tra lần cuối
-[ ]
-`;
-
-const fullStoryTemplate = `# Full Story
-
-[Toàn bộ truyện hoàn chỉnh]
-`;
-
-const finalScriptTemplate = `# Final Script
-
-[Kịch bản hoàn chỉnh]
-`;
-
-module.exports = { getFileTree };
+module.exports = { getFileTree, agentsMdTemplate };
