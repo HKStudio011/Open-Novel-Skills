@@ -1,11 +1,11 @@
 ---
-name: opennovel-project-setup
-description: Initialize or update an OpenNovel story project. Use when the user wants to create a new story project, update project metadata, or run opennovel init.
+name: opennovel-project-init
+description: Initialize a new OpenNovel story project. Use when the user wants to create a new story project, run opennovel init, or fill in project.md metadata.
 license: MIT
 compatibility: Node.js 18+, opennovel CLI
 metadata:
   version: "1.0.0"
-  category: setup
+  category: init
 ---
 
 # OpenNovel Project Setup
