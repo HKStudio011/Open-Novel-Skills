@@ -25,10 +25,10 @@ Combines a **CLI tool** + **7 agent skills** for AI coding assistants (Claude Co
 
 ```bash
 # Global install
-npm install -g opennovel
+npm install -g @hkstudio011/opennovel
 
 # Or run directly via npx
-npx opennovel init my-story
+npx @hkstudio011/opennovel init my-story
 ```
 
 **Requirements:** Node.js >= 18
@@ -38,7 +38,7 @@ npx opennovel init my-story
 ## Quick Start
 
 ```bash
-npx opennovel init my-story
+npx @hkstudio011/opennovel init my-story
 cd my-story
 ```
 
