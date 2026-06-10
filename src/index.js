@@ -1,11 +1,13 @@
 const init = require('./commands/init.js');
 const status = require('./commands/status.js');
 const next = require('./commands/next.js');
+const skills = require('./commands/skills.js');
 
 const COMMANDS = {
   init:   { fn: init,   desc: 'Scaffold a new novel project directory' },
   status: { fn: status, desc: 'Show writing progress for current project' },
   next:   { fn: next,   desc: 'Suggest the next step in the writing workflow' },
+  skills: { fn: skills, desc: 'List or install OpenNovel skills for your AI agent' },
 };
 
 function run(argv) {
