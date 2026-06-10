@@ -54,6 +54,29 @@ function init(args) {
   }
 
   initState(projectName, targetDir);
+
+  const skillsDir = path.resolve(__dirname, '..', '..', 'skills');
+  const projectSkillsDir = path.join(targetDir, '.agents', 'skills');
+
+  if (fs.existsSync(skillsDir)) {
+    console.log('');
+    console.log('  Installing OpenNovel skills...');
+    const entries = fs.readdirSync(skillsDir, { withFileTypes: true });
+    const skillDirs = entries.filter(e =>
+      e.isDirectory() && fs.existsSync(path.join(skillsDir, e.name, 'SKILL.md'))
+    );
+    for (const dir of skillDirs) {
+      const src = path.join(skillsDir, dir.name);
+      const dest = path.join(projectSkillsDir, dir.name);
+      if (!fs.existsSync(dest)) {
+        fs.cpSync(src, dest, { recursive: true });
+        console.log(`    \u2728 Installed: ${dir.name}`);
+      } else {
+        console.log(`    Skipped (exists): ${dir.name}`);
+      }
+    }
+  }
+
   console.log('');
   console.log(`\u2705 Project "${projectName}" initialized successfully!`);
   console.log('');
