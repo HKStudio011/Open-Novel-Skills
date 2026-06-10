@@ -11,12 +11,20 @@ function init(args) {
     process.exit(1);
   }
 
-  if (!/^[a-zA-Z0-9_-]+$/.test(projectName)) {
-    console.error('Error: Project name can only contain letters, numbers, hyphens, and underscores.');
+  const trimmed = projectName.trim();
+
+  if (!trimmed) {
+    console.error('Error: Project name cannot be empty.');
     process.exit(1);
   }
 
-  const targetDir = path.resolve(process.cwd(), projectName);
+  if (!/^[\p{L}\p{N}_ -]+$/u.test(trimmed)) {
+    console.error('Error: Project name can only contain letters, numbers, hyphens, underscores, and spaces.');
+    process.exit(1);
+  }
+
+  const safeName = trimmed.replace(/\s+/g, '-');
+  const targetDir = path.resolve(process.cwd(), safeName);
 
   if (fs.existsSync(targetDir)) {
     console.error(`Error: Directory "${targetDir}" already exists.`);
