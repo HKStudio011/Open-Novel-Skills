@@ -7,7 +7,8 @@
   },
   "files": [
     "bin/",
-    "src/"
+    "src/",
+    "skills/"
   ],
   "engines": {
     "node": ">=18"
