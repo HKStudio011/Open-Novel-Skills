@@ -1,6 +1,6 @@
 {
   "name": "@hkstudio011/opennovel",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "CLI tool for the OpenNovel novel-writing framework — scaffold project structure and track writing progress",
   "type": "commonjs",
   "bin": {
