@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { MODULES, initState } = require('../utils/state.js');
+const { initState } = require('../utils/state.js');
 const { getFileTree } = require('../templates/project.js');
 
 function init(args) {
@@ -45,17 +45,11 @@ function init(args) {
     }
   }
 
-  // Init state
   initState(projectName, targetDir);
   console.log('');
   console.log(`\u2705 Project "${projectName}" initialized successfully!`);
   console.log('');
-  console.log('Next steps:');
-  console.log(`  cd ${projectName}`);
-  console.log('  opennovel next');
-  console.log('  opennovel status');
-
-  // Print quick reference
+  console.log('Next step: load opennovel-writing-assistant skill to start writing.');
   console.log('');
   console.log('\u2500'.repeat(40));
   console.log('OpenNovel Workflow:');
