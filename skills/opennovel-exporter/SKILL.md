@@ -1,42 +1,51 @@
 ---
 name: opennovel-exporter
-description: Export OpenNovel chapters from content/ to output/ in various formats. Use when the user asks to export the story, compile chapters, generate output files, or convert to txt/html/docx/pdf.
+description: Export .md files to TXT and/or HTML. Use when the user asks to export a story, compile chapters, or convert markdown files to readable formats.
 license: MIT
-compatibility: Requires an OpenNovel project with content/chapter_*.md files
+compatibility: Works standalone — no project scaffolding required
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   category: export
 ---
 
 # OpenNovel Exporter
 
 ## Purpose
-Compile story chapters from `content/` into final output formats.
+Convert `.md` files to plain text (`.txt`) and/or styled HTML (`.html`).
 
-## Methods
+## Usage
 
-### CLI Export (basic)
-Run:
 ```
-opennovel export
-opennovel export --from 3 --to 7
+node skills/opennovel-exporter/scripts/export.js [options]
 ```
 
-This concatenates `content/chapter_*.md` into `output/full_story.md`.
+### Options
 
-### Script Export (advanced)
-For TXT, HTML, DOCX, or PDF output:
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--input <path>` | (prompt) | File `.md` or directory containing `.md` files |
+| `--format <type>` | `both` | Output type: `txt`, `html`, or `both` |
+| `--output <dir>` | `./output/` | Target directory for exported files |
+
+### Examples
+
 ```bash
-node skills/opennovel-exporter/scripts/export.js [--from N] [--to N] [--format txt|html|docx|pdf]
+# Prompt for input path, export both txt and html
+node skills/opennovel-exporter/scripts/export.js
+
+# Single file to txt only
+node skills/opennovel-exporter/scripts/export.js --input my-chapter.md --format txt
+
+# Directory, html only
+node skills/opennovel-exporter/scripts/export.js --input chapters/ --format html
+
+# Custom output directory
+node skills/opennovel-exporter/scripts/export.js --input story/ --output dist/
 ```
 
-## Process
-1. Read all chapter files from `content/` sorted by chapter number.
-2. Concatenate with chapter separators.
-3. Write to `output/` in the requested format.
+## Behavior
 
-## Rules
-- Never modify `content/` files — read-only on source.
-- Always write to `output/` — never anywhere else.
-- Preserve chapter headings and structure.
-- If a format conversion fails, fall back to Markdown.
+- **Single `.md` file**: exported as-is (TXT) plus rendered with HTML template
+- **Directory**: every `.md` file becomes its own `.txt` and/or `.html` in output
+- **Interactive prompt**: if `--input` is omitted, the script asks for the path
+- **HTML template**: clean typography, dark mode support, responsive layout

@@ -25,7 +25,7 @@ This skill (`opennovel`) is the root entry point. When the user says "I want to 
 | `opennovel-outline-builder` | Plan plot, timeline, chapter briefs | Missing structure, planning |
 | `opennovel-continuity-manager` | Track story state after chapters | After chapter is finalized |
 | `opennovel-review` | Diagnosis-only quality check | Before finalizing a chapter |
-| `opennovel-exporter` | Compile content/ to output/ | Ready for final output |
+| `opennovel-exporter` | Export .md files to TXT/HTML | Ready for final output |
 
 ## Workflow (managed by writing-assistant)
 
@@ -54,6 +54,6 @@ writing-assistant
 - `opennovel init <name>` — scaffold a new project
 - `opennovel status` — check progress
 - `opennovel next` — show next recommended step
-- `opennovel export [--from N] [--to N]` — compile chapters into output
+- `opennovel export` — see opennovel-exporter skill for usage
 - `opennovel skills list` — list available OpenNovel skills
 - `opennovel skills install --target codex|claude --scope project|user [--link]` — install skills
