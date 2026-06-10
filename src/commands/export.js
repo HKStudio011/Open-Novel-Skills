@@ -3,10 +3,9 @@ const path = require('path');
 const { loadState, saveState, findProjectDir } = require('../utils/state.js');
 
 const CHAPTER_NUM_RE = /(\d+)/;
-const APPROVED_DIR = 'approved';
+const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'output';
-const FULL_STORY_FILE = 'full_story.md';
-const FINAL_SCRIPT_FILE = 'final_script.md';
+const OUTPUT_FILE = 'full_story.md';
 
 function parseArgs(args) {
   let from = null;
@@ -48,24 +47,24 @@ function exportOutput(args) {
     process.exit(1);
   }
 
-  const approvedDir = path.join(projectDir, APPROVED_DIR);
+  const contentDir = path.join(projectDir, CONTENT_DIR);
 
-  if (!fs.existsSync(approvedDir)) {
-    console.log('Error: approved/ directory not found.');
+  if (!fs.existsSync(contentDir)) {
+    console.log('Error: content/ directory not found.');
     process.exit(1);
   }
 
-  let files = fs.readdirSync(approvedDir)
+  let files = fs.readdirSync(contentDir)
     .filter(f => f.endsWith('.md') && f !== '.gitkeep')
     .map(f => ({
       name: f,
       num: extractChapterNumber(f),
-      fullPath: path.join(approvedDir, f),
+      fullPath: path.join(contentDir, f),
     }));
 
   if (files.length === 0) {
-    console.log('No approved chapters found in approved/.');
-    console.log('Approve chapters first by saving them as .md files in approved/.');
+    console.log('No chapters found in content/.');
+    console.log('Write chapters first and save .md files in content/.');
     process.exit(1);
   }
 
@@ -95,21 +94,16 @@ function exportOutput(args) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  let fullStoryParts = [];
-  let scriptParts = [];
+  let storyParts = [];
 
   for (const file of files) {
     const content = fs.readFileSync(file.fullPath, 'utf-8');
     const processed = processContent(file.name, content);
-    fullStoryParts.push(processed);
-    scriptParts.push(content.trim());
+    storyParts.push(processed);
   }
 
-  const fullStoryPath = path.join(outputDir, FULL_STORY_FILE);
-  const finalScriptPath = path.join(outputDir, FINAL_SCRIPT_FILE);
-
-  fs.writeFileSync(fullStoryPath, fullStoryParts.join('\n'), 'utf-8');
-  fs.writeFileSync(finalScriptPath, scriptParts.join('\n\n'), 'utf-8');
+  const outputPath = path.join(outputDir, OUTPUT_FILE);
+  fs.writeFileSync(outputPath, storyParts.join('\n\n---\n\n'), 'utf-8');
 
   const rangeInfo = [];
   if (from !== null) rangeInfo.push(`from chapter ${from}`);
@@ -117,8 +111,7 @@ function exportOutput(args) {
   const rangeStr = rangeInfo.length > 0 ? ` (${rangeInfo.join(' ')})` : '';
 
   console.log(`Exported ${files.length} chapter(s)${rangeStr}:`);
-  console.log(`  ${FULL_STORY_FILE}  → ${fullStoryPath}`);
-  console.log(`  ${FINAL_SCRIPT_FILE} → ${finalScriptPath}`);
+  console.log(`  ${OUTPUT_FILE} → ${outputPath}`);
 
   if (state) {
     state.modules.output = 'done';
