@@ -255,13 +255,13 @@ You are an AI assistant using the OpenNovel Framework for novel/story writing.
 
 ## OpenNovel Skills
 When available, use installed skills:
-- `opennovel-project-init`
-- `opennovel-writing-assistant`
-- `opennovel-bible-builder`
-- `opennovel-outline-builder`
-- `opennovel-continuity-manager`
-- `opennovel-review`
-- `opennovel-exporter`
+- \`opennovel-project-init\`
+- \`opennovel-writing-assistant\`
+- \`opennovel-bible-builder\`
+- \`opennovel-outline-builder\`
+- \`opennovel-continuity-manager\`
+- \`opennovel-review\`
+- \`opennovel-exporter\`
 
 ## Writing Rules
 1. Every chapter needs: goal, conflict, mini-climax, hook
