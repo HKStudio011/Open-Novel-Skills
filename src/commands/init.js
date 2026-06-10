@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { MODULES, initState } = require('../utils/state.js');
+const { initState } = require('../utils/state.js');
 const { getFileTree } = require('../templates/project.js');
 
 function init(args) {
@@ -45,31 +45,26 @@ function init(args) {
     }
   }
 
-  // Init state
   initState(projectName, targetDir);
   console.log('');
   console.log(`\u2705 Project "${projectName}" initialized successfully!`);
   console.log('');
-  console.log('Next steps:');
-  console.log(`  cd ${projectName}`);
-  console.log('  opennovel next');
-  console.log('  opennovel status');
-
-  // Print quick reference
+  console.log('Next step: load opennovel-writing-assistant skill to start writing.');
   console.log('');
   console.log('\u2500'.repeat(40));
   console.log('OpenNovel Workflow:');
-  console.log('1. Start with Story Core  — core/story_core.md');
-  console.log('2. Build characters       — characters/');
-  console.log('3. Create the world       — world/');
-  console.log('4. Set logic rules        — logic/');
-  console.log('5. Plan the plot          — plot/');
-  console.log('6. Outline chapters       — chapters/');
-  console.log('7. AI writes chapters     — writing/');
-  console.log('8. Review & approve       — approved/');
-  console.log('9. Track continuity       — continuity/');
-  console.log('10. Final editing         — editing/');
-  console.log('11. Export final          — output/');
+  console.log('1. Init project         - project.md');
+  console.log('2. Build story bible    - bible.md');
+  console.log('3. Plan plot & outline  - outline.md');
+  console.log('4. Write chapters       - content/ (via opennovel-writing-assistant)');
+  console.log('5. Review chapters      - opennovel-review (diagnosis before finalize)');
+  console.log('6. Track continuity     - continuity.md');
+  console.log('7. Export final         - output/');
+  console.log('');
+  console.log('Install agent skills:');
+  console.log('  opennovel skills list');
+  console.log('  opennovel skills install --target codex --scope project');
+  console.log('  opennovel skills install --target claude --scope project');
 }
 
 module.exports = init;
