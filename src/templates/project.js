@@ -250,9 +250,6 @@ You are an AI assistant using the OpenNovel Framework for novel/story writing.
 ## Content
 - \`content/\` — chapter files (\`chapter_001.md\`, etc.)
 
-## Output
-- \`output/\` — final exported files (.txt, .html, .docx, .pdf)
-
 ## OpenNovel Skills
 When available, use installed skills:
 - \`opennovel-writing-assistant\`
@@ -260,7 +257,6 @@ When available, use installed skills:
 - \`opennovel-outline-builder\`
 - \`opennovel-continuity-manager\`
 - \`opennovel-review\`
-- \`opennovel-exporter\`
 
 ## Writing Rules
 1. Every chapter needs: goal, conflict, mini-climax, hook
@@ -278,7 +274,6 @@ function getFileTree(projectName) {
     { file: 'outline.md', content: outlineTemplate(projectName) },
     { file: 'continuity.md', content: continuityTemplate },
     { dir: 'content' },
-    { dir: 'output' },
     { file: 'AGENTS.md', content: agentsMdTemplate },
   ];
 }

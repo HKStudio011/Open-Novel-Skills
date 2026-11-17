@@ -11,7 +11,6 @@ User says "write a story" → load the `opennovel` skill → delegate to `openno
 opennovel init <name>    # Scaffold new project
 opennovel status         # Show progress
 opennovel next           # Suggest next step
-opennovel export         # Compile to output
 opennovel skills list    # List agent skills
 ```
 
@@ -21,7 +20,6 @@ opennovel skills list    # List agent skills
 - `opennovel-outline-builder` — Plot, timeline, chapter briefs
 - `opennovel-continuity-manager` — Track story state after chapters
 - `opennovel-review` — Diagnosis-only quality check
-- `opennovel-exporter` — Compile content/ to output/
 
 ## Writing rules enforced by this framework
 1. Every chapter needs: goal, conflict, mini-climax, hook
@@ -40,7 +38,6 @@ bible.md          — Story bible (characters, world, rules, secrets)
 outline.md        — Plot, chapter list, chapter briefs
 continuity.md     — Story state, revealed/hidden info, next chapter setup
 content/          — Chapter files (chapter_001.md, etc.)
-output/           — Final exported files
 .opennovel/       — State tracking
 AGENTS.md         — This file
 ```

@@ -4,7 +4,7 @@ Framework hỗ trợ viết tiểu thuyết với sự trợ giúp của AI.
 
 [:uk: English](README.md)
 
-Kết hợp **CLI tool** + **7 agent skills** dành cho AI coding assistant (Claude Code, OpenCode, Codex) — từ khởi tạo project, xây dựng thế giới nhân vật, lên outline, viết chapter, review, tracking continuity, đến export bản cuối.
+Kết hợp **CLI tool** + **6 agent skills** dành cho AI coding assistant (Claude Code, OpenCode, Codex) — từ khởi tạo project, xây dựng thế giới nhân vật, lên outline, viết chapter, review, đến tracking continuity.
 
 ---
 
@@ -17,7 +17,6 @@ Kết hợp **CLI tool** + **7 agent skills** dành cho AI coding assistant (Cla
 - **Built-in review** — 6 tầng quality check (logic → character → plot → pacing → emotion → prose)
 - **Continuity tracking** — tự động cập nhật story state sau mỗi chapter
 - **Raw Story Assimilation** — import truyện có sẵn, extract bible/outline, rewrite hoặc continue
-- **Export** — `.md` → `.txt` / `.html`
 
 ---
 
@@ -75,9 +74,6 @@ AI sẽ vào **Raw Story Assimilation Mode**:
 Bible → Outline → Write → Review → Revise → Continuity
   ↑                                              │
   └───────────────────── Next chapter ───────────┘
-                              │
-                              ↓
-                          Export
 ```
 
 Chi tiết:
@@ -88,7 +84,7 @@ Chi tiết:
 5. **review** — kiểm tra quality (chỉ chẩn đoán, không tự sửa)
 6. **writing-assistant** — sửa lỗi dựa trên review (logic → prose)
 7. **continuity-manager** — cập nhật story state (chỉ sau khi chapter finalized)
-8. Quay lại bước 4 cho chapter tiếp theo, hoặc **export** khi hoàn thành
+8. Quay lại bước 4 cho chapter tiếp theo
 
 ---
 
@@ -101,7 +97,6 @@ Chi tiết:
 | `opennovel-outline-builder` | Plot, timeline, chapter briefs | Thiếu cấu trúc, planning, hoặc analyze raw text |
 | `opennovel-continuity-manager` | Theo dõi story state | Sau mỗi chapter finalized |
 | `opennovel-review` | Kiểm tra quality (chỉ đọc) | Trước khi finalize chapter |
-| `opennovel-exporter` | .md → .txt / .html | Khi hoàn thành truyện |
 
 ---
 

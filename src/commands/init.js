@@ -91,7 +91,6 @@ function init(args) {
   console.log('4. Write chapters       - content/ (via opennovel-writing-assistant)');
   console.log('5. Review chapters      - opennovel-review (diagnosis before finalize)');
   console.log('6. Track continuity     - continuity.md');
-  console.log('7. Export final         - output/');
   console.log('');
   console.log('Skills installed at .agents/skills/ \u2014 ready for your AI coding assistant.');
 }
