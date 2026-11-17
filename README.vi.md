@@ -68,6 +68,20 @@ AI sẽ vào **Raw Story Assimilation Mode**:
 
 ---
 
+## Nâng cấp
+
+Skill được copy vào project khi `init` (hoặc qua `opennovel skills install`), và bản đã tồn tại không bao giờ bị ghi đè. Sau khi cập nhật OpenNovel CLI, làm mới skill trong project hiện có:
+
+```bash
+# trong thư mục project — xoá bản cũ rồi cài lại
+rm -rf .agents/skills/opennovel-*
+opennovel skills install --target codex --scope project
+```
+
+`--target claude` cài vào `.claude/skills/`. Nếu `AGENTS.md` của project còn nhắc đến `output/` hoặc `opennovel-exporter`, xoá các dòng đó — chúng không còn thuộc framework.
+
+---
+
 ## Luồng làm việc
 
 ```
