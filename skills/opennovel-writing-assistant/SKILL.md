@@ -18,7 +18,7 @@ Core orchestration skill for the OpenNovel Framework. Manages the end-to-end wri
 
 Read these files if they exist:
 
-- `project.md` — tone, POV, tense, genre, premise
+- `project.md` — tone, POV, tense, genre, premise, style
 - `bible.md` — characters, world rules, secrets timeline
 - `outline.md` — chapter brief, plot position
 - `continuity.md` — current story state, revealed/hidden info

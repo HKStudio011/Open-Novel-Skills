@@ -18,7 +18,7 @@ Review chapters for quality issues and diagnose problems. This skill is **read-o
 
 Read these for full accuracy:
 
-- `project.md` — tone, POV, tense
+- `project.md` — tone, POV, tense, style
 - `bible.md` — character profiles, world rules, secrets
 - `outline.md` — intended plot progression
 - `continuity.md` — revealed information, story state

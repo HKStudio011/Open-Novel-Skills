@@ -9,6 +9,12 @@ function projectTemplate(name) {
 - **Tense:**
 - **Estimated length:**
 
+## Style
+- **Narrative voice:** [how the narrator behaves — e.g., restrained, wry, lyrical]
+- **Target chapter length:** [words per chapter]
+- **Banned words/clichés:** [phrases this story must never use]
+- **Style references:** [works whose prose feels close to this story]
+
 ## Premise
 [One-sentence summary of the core idea]
 
