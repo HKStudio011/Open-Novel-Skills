@@ -67,3 +67,25 @@ target/scope parsing helper with `install`, updated `--help` text.
 - New subcommand (not version-aware `install`); separate PR from master.
 - Dry-run by default, `--yes` to apply.
 - `npm test` script added to package.json.
+
+## Amendments after independent review (2026-11-19)
+
+The reviewer reproduced five Important issues; #1 and #2 were re-graded as
+data-loss severity by effect. All fixed in one pass with RED→GREEN tests:
+
+1. **Source integrity**: a repo counterpart that exists but is invalid
+   (missing SKILL.md) never orphans an install — it is reported as unknown
+   and skipped. Orphan removal is refused when the repo has zero valid
+   skills (an empty/corrupt source must never trigger mass deletion).
+2. **Failure-safe replacement**: copy to a temp sibling first; swap only
+   after a successful copy; rollback on failure. Junctioned destinations
+   are unlinked and can be recreated on rollback.
+3. **Nested links**: `listEntries` compares links by target without
+   following or byte-reading them; trees containing them compare as
+   different instead of crashing (`EISDIR`).
+4. **Frontmatter-scoped parsing**: version is read only inside the opening
+   `---` block; root-level and nested forms accepted; CRLF supported;
+   body-only `version:` lines are ignored.
+5. **Honest safety text**: dry-run states that updating replaces the whole
+   directory including local edits; only same-version MODIFIED entries are
+   skipped. CLI surfaces apply failures as an error message + exit 1.

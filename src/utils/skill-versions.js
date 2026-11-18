@@ -10,12 +10,21 @@ const path = require('path');
  * - modified: same/unreadable version but content differs → { name, from, to }
  * - newer:    installed newer than repo → { name, from, to } (never downgraded)
  * - orphans:  installed opennovel-* skill absent from repo → { name }
- * - unknown:  opennovel-* directory without SKILL.md → { name }
+ * - unknown:  skipped entries → { name, reason? } (no SKILL.md, invalid repo
+ *   counterpart). Never deleted.
+ *
+ * Safety invariants:
+ * - A repo counterpart that exists but is invalid is never an orphan.
+ * - Orphan removal is refused when the repo has no valid skills at all.
+ * - Replacement copies to a temp sibling first; the old installation is only
+ *   touched after a successful copy, with rollback on failure.
  */
 
 function parseSkillVersion(skillMdText) {
-  const match = skillMdText.match(/^\s+version:\s*["']?([0-9]+\.[0-9]+\.[0-9]+)["']?\s*$/m);
-  return match ? match[1] : null;
+  const fm = skillMdText.match(/^\uFEFF?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*\r?(?:\n|$)/);
+  if (!fm) return null;
+  const v = fm[1].match(/^[ \t]*version:[ \t]*["']?([0-9]+\.[0-9]+\.[0-9]+)["']?[ \t]*\r?$/m);
+  return v ? v[1] : null;
 }
 
 function compareVersions(a, b) {
@@ -28,44 +37,60 @@ function compareVersions(a, b) {
   return 0;
 }
 
-function listFiles(dir, base = dir) {
+function listEntries(dir, base = dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      out.push(...listFiles(full, base));
+      out.push(...listEntries(full, base));
+      continue;
+    }
+    const rel = path.relative(base, full);
+    if (entry.isSymbolicLink()) {
+      // Links are compared by target, never followed or byte-read: a link to
+      // a directory must not crash comparison, and a broken link must not
+      // crash either.
+      let target = 'broken';
+      try { target = fs.readlinkSync(full); } catch { /* keep 'broken' */ }
+      out.push({ rel, link: target });
     } else {
-      out.push(path.relative(base, full));
+      out.push({ rel, link: null });
     }
   }
-  return out.sort();
+  return out.sort((a, b) => a.rel.localeCompare(b.rel));
 }
 
 function dirsEqual(a, b) {
-  const fa = listFiles(a);
-  const fb = listFiles(b);
-  if (fa.length !== fb.length) return false;
-  for (let i = 0; i < fa.length; i++) {
-    if (fa[i] !== fb[i]) return false;
-    if (!fs.readFileSync(path.join(a, fa[i])).equals(fs.readFileSync(path.join(b, fb[i])))) return false;
+  const ea = listEntries(a);
+  const eb = listEntries(b);
+  if (ea.length !== eb.length) return false;
+  for (let i = 0; i < ea.length; i++) {
+    if (ea[i].rel !== eb[i].rel) return false;
+    if (ea[i].link !== eb[i].link) return false;
+    if (ea[i].link === null &&
+        !fs.readFileSync(path.join(a, ea[i].rel)).equals(fs.readFileSync(path.join(b, eb[i].rel)))) {
+      return false;
+    }
   }
   return true;
 }
 
-function repoSkillNames(repoDir) {
-  if (!fs.existsSync(repoDir)) return new Set();
-  return new Set(
-    fs.readdirSync(repoDir, { withFileTypes: true })
-      .filter(e => e.isDirectory() && fs.existsSync(path.join(repoDir, e.name, 'SKILL.md')))
-      .map(e => e.name)
-  );
+/** Map of every repo skill directory → whether it has a valid SKILL.md. */
+function repoSkillMap(repoDir) {
+  const map = new Map();
+  if (!fs.existsSync(repoDir)) return map;
+  for (const e of fs.readdirSync(repoDir, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    map.set(e.name, fs.existsSync(path.join(repoDir, e.name, 'SKILL.md')));
+  }
+  return map;
 }
 
 function planUpgrade(installedDir, repoDir) {
   const plan = { updates: [], current: [], modified: [], newer: [], orphans: [], unknown: [] };
   if (!fs.existsSync(installedDir)) return plan;
 
-  const repoSkills = repoSkillNames(repoDir);
+  const repoSkills = repoSkillMap(repoDir);
   for (const entry of fs.readdirSync(installedDir, { withFileTypes: true })) {
     if (!entry.name.startsWith('opennovel-')) continue;
     const installedPath = path.join(installedDir, entry.name);
@@ -83,6 +108,10 @@ function planUpgrade(installedDir, repoDir) {
     }
     if (!repoSkills.has(name)) {
       plan.orphans.push({ name });
+      continue;
+    }
+    if (!repoSkills.get(name)) {
+      plan.unknown.push({ name, reason: 'repo copy has no SKILL.md' });
       continue;
     }
 
@@ -113,12 +142,50 @@ function removeInstalledDir(dest) {
   }
 }
 
+/**
+ * Replace dest with a copy of src without losing the old installation on
+ * failure: copy to a temp sibling first, then swap, with rollback.
+ * Symlinked/junctioned destinations are unlinked (their targets survive).
+ */
+function replaceDirSafe(src, dest) {
+  const tmp = `${dest}.upgrade-tmp-${process.pid}`;
+  const backup = `${dest}.upgrade-backup-${process.pid}`;
+  removeInstalledDir(tmp);
+  removeInstalledDir(backup);
+
+  const stat = fs.lstatSync(dest, { throwIfNoEntry: false });
+  const linkTarget = (stat && stat.isSymbolicLink()) ? fs.readlinkSync(dest) : null;
+
+  try {
+    fs.cpSync(src, tmp, { recursive: true });
+    if (stat) {
+      if (linkTarget !== null) fs.unlinkSync(dest);
+      else fs.renameSync(dest, backup);
+    }
+    fs.renameSync(tmp, dest);
+    if (fs.existsSync(backup)) removeInstalledDir(backup);
+  } catch (err) {
+    removeInstalledDir(tmp);
+    if (!fs.existsSync(dest)) {
+      if (fs.existsSync(backup)) {
+        fs.renameSync(backup, dest);
+      } else if (linkTarget !== null) {
+        try { fs.symlinkSync(linkTarget, dest, 'junction'); } catch { /* best effort */ }
+      }
+    }
+    throw err;
+  }
+}
+
 function applyUpgrade(plan, installedDir, repoDir) {
+  const validRepoSkills = [...repoSkillMap(repoDir).values()].filter(Boolean).length;
+  if (plan.orphans.length > 0 && validRepoSkills === 0) {
+    throw new Error('Refusing to remove orphans: repository contains no valid skills. Reinstall the OpenNovel CLI and retry.');
+  }
+
   const applied = [];
   for (const u of plan.updates) {
-    const dest = path.join(installedDir, u.name);
-    removeInstalledDir(dest);
-    fs.cpSync(path.join(repoDir, u.name), dest, { recursive: true });
+    replaceDirSafe(path.join(repoDir, u.name), path.join(installedDir, u.name));
     applied.push({ action: 'updated', name: u.name, from: u.from, to: u.to });
   }
   for (const o of plan.orphans) {

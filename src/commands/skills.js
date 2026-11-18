@@ -226,16 +226,23 @@ function upgradeSkills(args) {
   for (const s of plan.modified) console.log(`  MODIFIED  ${s.name} (${s.from}) — local edits, skipped`);
   for (const s of plan.newer) console.log(`  newer     ${s.name} (${s.from} > repo ${s.to}) — skipped`);
   for (const s of plan.orphans) console.log(`  orphan    ${s.name} — will be removed`);
-  for (const s of plan.unknown) console.log(`  unknown   ${s.name} — no SKILL.md, skipped`);
+  for (const s of plan.unknown) console.log(`  unknown   ${s.name} — ${s.reason || 'no SKILL.md'}, skipped`);
   console.log('');
 
   if (!apply) {
     console.log('Dry run — no changes made. Re-run with --yes to apply.');
-    console.log('Updating replaces the whole skill directory; locally modified skills are always skipped.');
+    console.log('Updating an outdated skill replaces its entire directory, including any local edits.');
+    console.log('Only same-version differences detected as MODIFIED are skipped.');
     return;
   }
 
-  const applied = applyUpgrade(plan, baseDir, SKILLS_DIR);
+  let applied;
+  try {
+    applied = applyUpgrade(plan, baseDir, SKILLS_DIR);
+  } catch (err) {
+    console.error(`Upgrade failed: ${err.message}`);
+    process.exit(1);
+  }
   for (const a of applied) {
     console.log(a.action === 'updated'
       ? `  Updated: ${a.name} (${a.from} -> ${a.to})`

@@ -100,3 +100,21 @@ test('project with no installed skills prints a friendly no-op', () => {
   const out = runCli(proj);
   assert.match(out, /nothing to upgrade/i);
 });
+
+test('outdated skill with local edits: dry-run warns about wholesale replacement, --yes replaces including local files', () => {
+  const { proj, skillsDir } = makeProject();
+  const waDir = writeSkill(skillsDir, 'opennovel-writing-assistant', '0.9.0', 'old content');
+  fs.writeFileSync(path.join(waDir, 'my-local-notes.txt'), 'user notes', 'utf8');
+
+  const dry = runCli(proj);
+  assert.match(dry, /replaces its entire directory, including any local edits/i);
+  assert.match(dry, /Only same-version differences detected as MODIFIED are skipped/i);
+  // Dry run leaves the local file in place
+  assert.equal(fs.existsSync(path.join(waDir, 'my-local-notes.txt')), true);
+
+  runCli(proj, ['--yes']);
+  // Replacement is wholesale: local extra file is gone, content matches repo
+  assert.equal(fs.existsSync(path.join(waDir, 'my-local-notes.txt')), false);
+  const repoWa = fs.readFileSync(path.join(REPO_SKILLS, 'opennovel-writing-assistant', 'SKILL.md'), 'utf8');
+  assert.equal(fs.readFileSync(path.join(waDir, 'SKILL.md'), 'utf8'), repoWa);
+});
