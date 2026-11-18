@@ -67,9 +67,14 @@ function planUpgrade(installedDir, repoDir) {
 
   const repoSkills = repoSkillNames(repoDir);
   for (const entry of fs.readdirSync(installedDir, { withFileTypes: true })) {
-    if (!entry.isDirectory() || !entry.name.startsWith('opennovel-')) continue;
+    if (!entry.name.startsWith('opennovel-')) continue;
+    const installedPath = path.join(installedDir, entry.name);
+    let isDir = entry.isDirectory();
+    if (!isDir && entry.isSymbolicLink()) {
+      try { isDir = fs.statSync(installedPath).isDirectory(); } catch { isDir = false; }
+    }
+    if (!isDir) continue;
     const name = entry.name;
-    const installedPath = path.join(installedDir, name);
     const repoPath = path.join(repoDir, name);
 
     if (!fs.existsSync(path.join(installedPath, 'SKILL.md'))) {
@@ -98,4 +103,29 @@ function planUpgrade(installedDir, repoDir) {
   return plan;
 }
 
-module.exports = { parseSkillVersion, compareVersions, dirsEqual, planUpgrade };
+function removeInstalledDir(dest) {
+  const stat = fs.lstatSync(dest, { throwIfNoEntry: false });
+  if (!stat) return;
+  if (stat.isSymbolicLink()) {
+    fs.unlinkSync(dest);
+  } else {
+    fs.rmSync(dest, { recursive: true, force: true });
+  }
+}
+
+function applyUpgrade(plan, installedDir, repoDir) {
+  const applied = [];
+  for (const u of plan.updates) {
+    const dest = path.join(installedDir, u.name);
+    removeInstalledDir(dest);
+    fs.cpSync(path.join(repoDir, u.name), dest, { recursive: true });
+    applied.push({ action: 'updated', name: u.name, from: u.from, to: u.to });
+  }
+  for (const o of plan.orphans) {
+    removeInstalledDir(path.join(installedDir, o.name));
+    applied.push({ action: 'removed', name: o.name });
+  }
+  return applied;
+}
+
+module.exports = { parseSkillVersion, compareVersions, dirsEqual, planUpgrade, applyUpgrade };

@@ -9,6 +9,7 @@ const {
   compareVersions,
   dirsEqual,
   planUpgrade,
+  applyUpgrade,
 } = require('../src/utils/skill-versions.js');
 
 function makeTmp() {
@@ -96,4 +97,51 @@ test('planUpgrade on a missing installed directory returns empty buckets', () =>
   writeSkill(repo, 'opennovel-writing-assistant', '1.0.0', 'wa');
   const plan = planUpgrade(path.join(root, 'does-not-exist'), repo);
   for (const bucket of Object.values(plan)) assert.deepEqual(bucket, []);
+});
+
+test('applyUpgrade replaces updates, removes orphans, touches nothing else', () => {
+  const root = makeTmp();
+  const repo = path.join(root, 'repo');
+  const installed = path.join(root, 'installed');
+  fs.mkdirSync(installed, { recursive: true });
+
+  writeSkill(repo, 'opennovel-writing-assistant', '1.1.0', 'new version');
+  writeSkill(repo, 'opennovel-review', '1.0.0', 'review repo');
+  const waInstalled = writeSkill(installed, 'opennovel-writing-assistant', '1.0.0', 'old version');
+  writeSkill(installed, 'opennovel-review', '1.0.0', 'review repo\nlocal edit');
+  writeSkill(installed, 'opennovel-legacy-tool', '1.0.0', 'orphan');
+  writeSkill(installed, 'other-skill', '0.1.0', 'untouched');
+
+  const plan = planUpgrade(installed, repo);
+  const applied = applyUpgrade(plan, installed, repo);
+
+  assert.deepEqual(applied.map(a => a.action).sort(), ['removed', 'updated']);
+  assert.match(fs.readFileSync(path.join(waInstalled, 'SKILL.md'), 'utf8'), /new version/);
+  assert.equal(fs.existsSync(path.join(installed, 'opennovel-legacy-tool')), false);
+  assert.match(fs.readFileSync(path.join(installed, 'opennovel-review', 'SKILL.md'), 'utf8'), /local edit/);
+  assert.equal(fs.existsSync(path.join(installed, 'other-skill', 'SKILL.md')), true);
+});
+
+test('applyUpgrade unlinks a junctioned skill dir instead of recursing into the repo copy', () => {
+  const root = makeTmp();
+  const repo = path.join(root, 'repo');
+  const installed = path.join(root, 'installed');
+  fs.mkdirSync(installed, { recursive: true });
+
+  const repoWa = writeSkill(repo, 'opennovel-writing-assistant', '1.1.0', 'repo new');
+  const repoOld = path.join(root, 'old-copy');
+  writeSkill(root, 'old-copy', '1.0.0', 'old');
+  const dest = path.join(installed, 'opennovel-writing-assistant');
+  fs.symlinkSync(repoOld, dest, 'junction');
+
+  const plan = planUpgrade(installed, repo);
+  assert.equal(plan.updates.length, 1);
+  applyUpgrade(plan, installed, repo);
+
+  // Repo copy and old linked copy are untouched
+  assert.match(fs.readFileSync(path.join(repoWa, 'SKILL.md'), 'utf8'), /repo new/);
+  assert.match(fs.readFileSync(path.join(repoOld, 'SKILL.md'), 'utf8'), /old/);
+  // Destination is now a real directory with the new content, not a link
+  assert.equal(fs.lstatSync(dest).isSymbolicLink(), false);
+  assert.match(fs.readFileSync(path.join(dest, 'SKILL.md'), 'utf8'), /repo new/);
 });
