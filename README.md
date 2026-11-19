@@ -73,12 +73,12 @@ The AI enters **Raw Story Assimilation Mode**:
 Skills are copied into your project at `init` time (or by `opennovel skills install`), and existing copies are never overwritten. After updating the OpenNovel CLI, refresh an existing project's skills:
 
 ```bash
-# from your project folder — delete old copies, then reinstall
-rm -rf .agents/skills/opennovel-*
-opennovel skills install --target codex --scope project
+# from your project folder — dry run first, then apply
+opennovel skills upgrade --target codex --scope project
+opennovel skills upgrade --target codex --scope project --yes
 ```
 
-`--target claude` installs to `.claude/skills/` instead. If your project's `AGENTS.md` still mentions `output/` or `opennovel-exporter`, delete those lines — they are no longer part of the framework.
+`upgrade` updates outdated skills, removes orphaned ones (like `opennovel-exporter`), and always skips skills you have edited locally (marked MODIFIED). `--target claude` uses `.claude/skills/` instead. The manual alternative is deleting `.agents/skills/opennovel-*` and re-running `opennovel skills install --target codex --scope project`. If your project's `AGENTS.md` still mentions `output/` or `opennovel-exporter`, delete those lines — they are no longer part of the framework.
 
 ---
 
