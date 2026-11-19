@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { planUpgrade, applyUpgrade } = require('../utils/skill-versions.js');
 
 const SKILLS_DIR = path.resolve(__dirname, '..', '..', 'skills');
 
@@ -166,6 +167,90 @@ function findProjectDir() {
   }
 }
 
+function upgradeSkills(args) {
+  // Target/scope validation mirrors installSkills (kept self-contained so
+  // install's behavior is untouched).
+  const targetIndex = args.indexOf('--target');
+  const scopeIndex = args.indexOf('--scope');
+  const apply = args.includes('--yes');
+
+  if (targetIndex === -1 || scopeIndex === -1) {
+    console.error('Usage: opennovel skills upgrade --target codex|claude --scope project|user [--yes]');
+    console.error('');
+    console.error('  Dry run by default: prints planned updates, changes nothing.');
+    console.error('  --yes    Apply updates (replaces outdated skill dirs, removes orphans).');
+    process.exit(1);
+  }
+
+  const target = args[targetIndex + 1];
+  const scope = args[scopeIndex + 1];
+
+  if (!['codex', 'claude'].includes(target)) {
+    console.error(`Invalid target: "${target}". Use "codex" or "claude".`);
+    process.exit(1);
+  }
+  if (!['project', 'user'].includes(scope)) {
+    console.error(`Invalid scope: "${scope}". Use "project" or "user".`);
+    process.exit(1);
+  }
+  if (!fs.existsSync(SKILLS_DIR)) {
+    console.error('No skills directory found at:', SKILLS_DIR);
+    process.exit(1);
+  }
+
+  const projectDir = (scope === 'project') ? findProjectDir() : null;
+  if (scope === 'project' && !projectDir) {
+    console.error('Not inside an OpenNovel project. Run from a project directory or use --scope user.');
+    process.exit(1);
+  }
+  const baseDir = (scope === 'project')
+    ? path.join(projectDir, TARGET_DIRS[target][scope])
+    : path.resolve(TARGET_DIRS[target][scope].replace(/^~/, process.env.HOME || process.env.USERPROFILE));
+
+  if (!fs.existsSync(baseDir)) {
+    console.log(`No skills installed at ${baseDir} — nothing to upgrade.`);
+    return;
+  }
+
+  const plan = planUpgrade(baseDir, SKILLS_DIR);
+  const total = Object.values(plan).reduce((n, bucket) => n + bucket.length, 0);
+  if (total === 0) {
+    console.log('No OpenNovel skills installed here — nothing to upgrade.');
+    return;
+  }
+
+  console.log(`Upgrade plan for ${baseDir}:`);
+  console.log('');
+  for (const u of plan.updates) console.log(`  update    ${u.name}  ${u.from} -> ${u.to}`);
+  for (const s of plan.current) console.log(`  current   ${s.name} (${s.version})`);
+  for (const s of plan.modified) console.log(`  MODIFIED  ${s.name} (${s.from}) — local edits, skipped`);
+  for (const s of plan.newer) console.log(`  newer     ${s.name} (${s.from} > repo ${s.to}) — skipped`);
+  for (const s of plan.orphans) console.log(`  orphan    ${s.name} — will be removed`);
+  for (const s of plan.unknown) console.log(`  unknown   ${s.name} — ${s.reason || 'no SKILL.md'}, skipped`);
+  console.log('');
+
+  if (!apply) {
+    console.log('Dry run — no changes made. Re-run with --yes to apply.');
+    console.log('Updating an outdated skill replaces its entire directory, including any local edits.');
+    console.log('Only same-version differences detected as MODIFIED are skipped.');
+    return;
+  }
+
+  let applied;
+  try {
+    applied = applyUpgrade(plan, baseDir, SKILLS_DIR);
+  } catch (err) {
+    console.error(`Upgrade failed: ${err.message}`);
+    process.exit(1);
+  }
+  for (const a of applied) {
+    console.log(a.action === 'updated'
+      ? `  Updated: ${a.name} (${a.from} -> ${a.to})`
+      : `  Removed: ${a.name}`);
+  }
+  console.log(`Done. ${applied.length} change(s) applied.`);
+}
+
 function skills(args) {
   const subcommand = args[0];
 
@@ -175,6 +260,7 @@ function skills(args) {
     console.log('Usage:');
     console.log('  opennovel skills list');
     console.log('  opennovel skills install --target codex|claude --scope project|user [--link]');
+    console.log('  opennovel skills upgrade --target codex|claude --scope project|user [--yes]');
     console.log('');
     console.log('Targets:');
     console.log('  codex     Codex CLI (.agents/skills/)');
@@ -190,6 +276,8 @@ function skills(args) {
     listSkills();
   } else if (subcommand === 'install') {
     installSkills(args.slice(1));
+  } else if (subcommand === 'upgrade') {
+    upgradeSkills(args.slice(1));
   } else {
     console.error(`Unknown subcommand: "${subcommand}"`);
     console.error('Run "opennovel skills --help" for usage.');
