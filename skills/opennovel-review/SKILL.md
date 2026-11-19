@@ -4,7 +4,7 @@ description: Review story chapters for quality, consistency, and logic errors. D
 license: MIT
 compatibility: Requires an OpenNovel project with bible.md, outline.md, continuity.md for full accuracy
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: review
 ---
 
@@ -18,7 +18,7 @@ Review chapters for quality issues and diagnose problems. This skill is **read-o
 
 Read these for full accuracy:
 
-- `project.md` — tone, POV, tense
+- `project.md` — tone, POV, tense, style
 - `bible.md` — character profiles, world rules, secrets
 - `outline.md` — intended plot progression
 - `continuity.md` — revealed information, story state
@@ -35,7 +35,15 @@ Review in this exact order. Each step depends on the previous one:
 3. **Plot** — Does the chapter advance the plot per outline.md? Are events meaningful? Does the mini-climax have weight? Does the hook make the reader want the next chapter?
 4. **Pacing** — Does the opening grab attention? Does the middle drag? Are there unnecessary scenes? Are transitions smooth?
 5. **Emotion** — Does the chapter land at the right emotional tone? Are there memorable moments? Does emotional intensity build?
-6. **Prose** — Is the tone correct for this story? Are words repeated unnecessarily? Are sentences natural? Is there a good balance of description and dialogue?
+6. **Prose** — scan for AI-slop patterns and report each occurrence:
+   - **Narrator explains** — names emotions ("she felt..."), states motives, or tells the reader what a scene meant
+   - **Redundant summary** — a sentence restating what dialogue or action just showed
+   - **Moralizing** — the narrator draws the lesson ("and in that moment, she understood..."), especially at chapter endings
+   - **Stock phrasing** — clichés doing the emotional work ("a wave of", "the air was thick with tension", "little did they know")
+   - **Uniform voice** — every character speaks in the same clever, balanced rhythm
+   - **Tics** — heavy adverbs and intensifiers ("suddenly", "very"), one sentence pattern repeated
+
+   Severity: narrator-explaining and moralizing are **Minor** when scattered, **Major** when dense or at a chapter's emotional peak. The rest are **Minor** or **Suggestion**. Keep the tone check from this step's original purpose: flag tone that contradicts project.md.
 
 ## Output Format
 

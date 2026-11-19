@@ -4,7 +4,7 @@ description: Core orchestration skill for the OpenNovel writing framework. Use w
 license: MIT
 compatibility: Works standalone. Best with: bible.md, outline.md, continuity.md
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: writing
 ---
 
@@ -18,7 +18,7 @@ Core orchestration skill for the OpenNovel Framework. Manages the end-to-end wri
 
 Read these files if they exist:
 
-- `project.md` — tone, POV, tense, genre, premise
+- `project.md` — tone, POV, tense, genre, premise, style
 - `bible.md` — characters, world rules, secrets timeline
 - `outline.md` — chapter brief, plot position
 - `continuity.md` — current story state, revealed/hidden info
@@ -66,6 +66,32 @@ Each chapter must include:
 - **Conflict** — what obstacle drives the tension?
 - **Mini-climax** — the peak moment of this chapter
 - **Hook** — what makes the reader want the next chapter?
+
+### Prose Style
+
+Applies to every scene you write or rewrite, in any mode. Write scenes, not summaries — the reader watches events happen; the narrator stays invisible.
+
+Render everything through what can be seen, heard, said, or done:
+
+| Instead of | Write |
+|---|---|
+| Naming emotions ("she felt guilty") | Behavior that shows them (she put the phone face-down and stopped stirring) |
+| Stating motives ("he lied to protect her") | Choices and dialogue that let the reader infer the motive |
+| Narrator lectures ("As everyone knew, the war...") | A character learning it on the page, or the information staying hidden |
+| Explaining a scene's meaning ("it was the last time...") | Nothing — if the scene showed it, cut the line |
+| Asserting what other characters think or feel (limited POV) | Only what the POV character sees and hears of them |
+
+One test: if a sentence tells the reader what to think about what just happened, delete it.
+
+If `project.md` has a filled-in **Style** section, it overrides these defaults for that story.
+
+Example — narrator explaining (not acceptable):
+
+> Minh felt a wave of guilt. He knew he had betrayed his brother's trust, and the weight of that realization was almost unbearable. It was the last time they would laugh together like this.
+
+Same beat, rendered:
+
+> Minh put the phone face-down. Across the table, his brother was still laughing at something on his own screen.
 
 ### 4. Review Cycle
 
@@ -161,7 +187,6 @@ Use when the user wants to import a story or chapter into the OpenNovel framewor
 - Never update continuity.md directly — always go through continuity-manager
 - Never delete content without user confirmation
 - Never contradict bible.md (character consistency, world rules, secret timing)
-- Do not write to output/ — that is for exporter only
 - If the user gives vague instructions, ask clarifying questions (2-3 specific options)
 - Keep POV and tense consistent with project.md
 - After each approved chapter, the state is maintained through continuity.md — no separate status command needed

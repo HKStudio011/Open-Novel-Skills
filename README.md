@@ -4,7 +4,7 @@ AI-assisted novel/story writing framework.
 
 [:vietnam: Tiếng Việt](README.vi.md)
 
-Combines a **CLI tool** + **7 agent skills** for AI coding assistants (Claude Code, OpenCode, Codex) — from project scaffolding, story bible, plot outline, chapter writing, review, continuity tracking, to final export.
+Combines a **CLI tool** + **6 agent skills** for AI coding assistants (Claude Code, OpenCode, Codex) — from project scaffolding, story bible, plot outline, chapter writing, review, to continuity tracking.
 
 ---
 
@@ -17,7 +17,6 @@ Combines a **CLI tool** + **7 agent skills** for AI coding assistants (Claude Co
 - **Built-in review** — 6-layer quality check (logic → character → plot → pacing → emotion → prose)
 - **Continuity tracking** — auto-update story state after each chapter
 - **Raw Story Assimilation** — import existing stories, extract bible/outline, rewrite or continue
-- **Export** — `.md` → `.txt` / `.html`
 
 ---
 
@@ -69,15 +68,26 @@ The AI enters **Raw Story Assimilation Mode**:
 
 ---
 
+## Upgrading
+
+Skills are copied into your project at `init` time (or by `opennovel skills install`), and existing copies are never overwritten. After updating the OpenNovel CLI, refresh an existing project's skills:
+
+```bash
+# from your project folder — delete old copies, then reinstall
+rm -rf .agents/skills/opennovel-*
+opennovel skills install --target codex --scope project
+```
+
+`--target claude` installs to `.claude/skills/` instead. If your project's `AGENTS.md` still mentions `output/` or `opennovel-exporter`, delete those lines — they are no longer part of the framework.
+
+---
+
 ## Workflow
 
 ```
 Bible → Outline → Write → Review → Revise → Continuity
   ↑                                                │
   └───────────────────── Next chapter ─────────────┘
-                              │
-                              ↓
-                          Export
 ```
 
 Breakdown:
@@ -88,7 +98,7 @@ Breakdown:
 5. **review** — quality check (diagnosis-only, no edits)
 6. **writing-assistant** — fix issues from review (logic first, prose last)
 7. **continuity-manager** — update story state (only after chapter finalized)
-8. Loop to step 4 for next chapter, or **export** on completion
+8. Loop to step 4 for the next chapter
 
 ---
 
@@ -101,7 +111,6 @@ Breakdown:
 | `opennovel-outline-builder` | Plot, timeline, chapter briefs | Missing structure, planning, or raw text analysis |
 | `opennovel-continuity-manager` | Track story state | After each finalized chapter |
 | `opennovel-review` | Diagnosis-only quality check | Before finalizing a chapter |
-| `opennovel-exporter` | .md → .txt / .html | Story complete |
 
 ---
 
